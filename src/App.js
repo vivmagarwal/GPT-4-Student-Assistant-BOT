@@ -48,7 +48,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot">
-      <h2>Masaischool AI Tutor (24x7 Available)</h2>
+      <h2>Masaischool AI Tutor (24x7 Available) </h2>
       <div className="chat-history" ref={chatHistoryRef}>
         {chatHistory.map((message, index) => (
           <code><pre key={index} className={`message-${message.role}`}>
