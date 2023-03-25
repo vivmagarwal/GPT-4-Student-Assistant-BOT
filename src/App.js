@@ -13,6 +13,7 @@ const Chatbot = () => {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState(null);
   const chatHistoryRef = useRef(null);
 
   const sendMessage = async (message) => {
@@ -21,34 +22,41 @@ const Chatbot = () => {
 
     setChatHistory(newChatHistory);
     setLoading(true);
+    setError(null);
 
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        model: "gpt-3.5-turbo",
-        messages: newChatHistory,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.REACT_APP_OPENAI_SECRET}`,
+    try {
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          messages: newChatHistory,
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_OPENAI_SECRET}`,
+          },
+        }
+      );
 
-    console.log(response);
-    setLoading(false);
+      console.log(response);
+      setLoading(false);
 
-    const chatbotMessage = response.data.choices[0].message.content;
+      const chatbotMessage = response.data.choices[0].message.content;
 
-    const updatedChatHistory = [
-      ...newChatHistory,
-      { role: "assistant", content: chatbotMessage },
-    ];
+      const updatedChatHistory = [
+        ...newChatHistory,
+        { role: "assistant", content: chatbotMessage },
+      ];
 
-    setChatHistory(updatedChatHistory);
-    setInputValue("");
-    inputRef.current.focus();
+      setChatHistory(updatedChatHistory);
+      setInputValue("");
+      inputRef.current.focus();
+    } catch (error) {
+      setLoading(false);
+      setError("Oops! Something went wrong. Please try again later.");
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -84,6 +92,7 @@ const Chatbot = () => {
           disabled={loading}
           ref={inputRef}
         />
+        {error && <div className="error">{error}</div>}
       </div>
 
       {loading && (
@@ -96,6 +105,7 @@ const Chatbot = () => {
     </div>
   );
 };
+
 
 export default function App() {
   return (

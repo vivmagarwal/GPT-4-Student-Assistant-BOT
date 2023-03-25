@@ -37,13 +37,44 @@
   align-self: flex-end;
   background-color: #0077b5;
   color: white;
+  position: relative;
 }
+
+.chat-history .message-user::before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid #0077b5;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #0077b5;
+  border-bottom: 10px solid transparent;
+  right: -19px;
+  top: 6px;
+}
+
+
+
 
 .chat-history .message-assistant {
   align-self: flex-start;
   background-color: #f2f2f2;
   color: #333;
   text-align: left;
+  position: relative;
+}
+
+.chat-history .message-assistant::before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid transparent;
+  border-right: 10px solid #f2f2f2;
+  border-top: 10px solid #f2f2f2;
+  border-bottom: 10px solid transparent;
+  left: -19px;
+  top: 6px;
 }
 
 .chat-history .message .message-content {
