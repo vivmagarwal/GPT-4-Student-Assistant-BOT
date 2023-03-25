@@ -3,16 +3,24 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 const Chatbot = () => {
+  const inputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState([
-    { role: "system", content: "You are a tutor that always responds in the Socratic style. You never give the student the answer, but always try to ask just the right question to help them learn to think for themselves. You should always tune your question to the interst & knowledge of the student, breaking down the problem into simpler parts until it's at just the right level for them." },
+    {
+      role: "system",
+      content:
+        "You are a tutor that always responds in the Socratic style. You never give the student the answer, but always try to ask just the right question to help them learn to think for themselves. You should always tune your question to the interst & knowledge of the student, breaking down the problem into simpler parts until it's at just the right level for them.",
+    },
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const chatHistoryRef = useRef(null);
 
   const sendMessage = async (message) => {
     const newMessage = { role: "user", content: message };
     const newChatHistory = [...chatHistory, newMessage];
+
     setChatHistory(newChatHistory);
+    setLoading(true);
 
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
@@ -28,7 +36,8 @@ const Chatbot = () => {
       }
     );
 
-    console.log(response)
+    console.log(response);
+    setLoading(false);
 
     const chatbotMessage = response.data.choices[0].message.content;
 
@@ -38,12 +47,14 @@ const Chatbot = () => {
     ];
 
     setChatHistory(updatedChatHistory);
-    setInputValue(''); // clear input value
+    setInputValue("");
+    inputRef.current.focus();
   };
 
   useEffect(() => {
     // scroll chat history to the bottom on every update
     chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+    inputRef.current.focus();
   }, [chatHistory]);
 
   return (
@@ -51,22 +62,37 @@ const Chatbot = () => {
       <h2>Masaischool AI Tutor (24x7 Available) </h2>
       <div className="chat-history" ref={chatHistoryRef}>
         {chatHistory.map((message, index) => (
-          <code><pre key={index} className={`message-${message.role}`}>
-            {message.content}
-          </pre></code>
+          <code key={index}  className={`message-${message.role}`} >
+            <pre>
+              {message.content}
+            </pre>
+          </code>
         ))}
       </div>
       <div className="chat-input">
-        <input
-          type="text"
+        <textarea
+          rows='3'
           placeholder="Type your message here"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
-          onKeyPress={(event) =>
-            event.key === "Enter" && sendMessage(inputValue)
-          }
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              sendMessage(inputValue);
+            }
+          }}
+          disabled={loading}
+          ref={inputRef}
         />
       </div>
+
+      {loading && (
+        <div className="loading-animation">
+          <div className="ball"></div>
+          <div className="ball"></div>
+          <div className="ball"></div>
+        </div>
+      )}
     </div>
   );
 };

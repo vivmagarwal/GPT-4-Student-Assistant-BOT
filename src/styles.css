@@ -91,3 +91,59 @@
 pre {
   white-space: pre-wrap;
 }
+
+code {
+  padding: 0 16px;
+  border-radius: 8px;
+  margin: 1rem;
+}
+
+textarea {
+  width: 100%;
+}
+
+/* loading */
+
+/* Add this to your styles.css file */
+
+/* Add this to your styles.css file */
+
+.loading-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.ball {
+  width: 10px;
+  height: 10px;
+  background-color: #3498db;
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: juggle 1s infinite;
+}
+
+.ball:nth-child(2) {
+  animation-delay: -0.33s;
+}
+
+.ball:nth-child(3) {
+  animation-delay: -0.66s;
+}
+
+@keyframes juggle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
