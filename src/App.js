@@ -28,14 +28,15 @@ const Chatbot = () => {
 
       // comment this out
       const response = await axios.post(
-        `https://fair-cyan-indri-robe.cyclic.app/openai-chat`,
+        `https://open-ai-server.iifsd.in/openai-chat`,
         {
           model: "gpt-3.5-turbo",
           messages: newChatHistory,
         }
-      );    
+      );      
 
       // un-comment it.
+      // in .env file add a key REACT_APP_OPENAI_SECRET with open ai secret as value.
       // const response = await axios.post(
       //   "https://api.openai.com/v1/chat/completions",
       //   {
